@@ -110,6 +110,9 @@ samples_DF$Binomial <-
   as.factor()
 
 summary(samples_DF)
+# Binomial
+# 0:1030  
+# 1: 940
 
 # Define the training control using 
 #   10-fold cross-validation with 100 repeats.
@@ -124,14 +127,22 @@ train_control <-
 formula <- 
   Binomial ~ mag_Comp + green_Comp + dir_Comp
 
-# formula <- 
-#   Binomial ~ normal_Mag + green_Comp + dir_Comp + 
+# formula <-
+#   Binomial ~ normal_Mag + green_Comp + dir_Comp +
 #   normal_Mag:green_Comp + normal_Mag:dir_Comp + green_Comp:dir_Comp +
 #   normal_Mag:green_Comp:dir_Comp
 
+# formula <-
+#   Binomial ~ green_Comp +
+#   normal_Mag:dir_Comp + green_Comp:dir_Comp
+
+# formula <-
+#   Binomial ~ normal_Mag + green_Comp + dir_Comp +
+#   mag_Comp
+
 formula <-
-  Binomial ~ green_Comp +
-  normal_Mag:dir_Comp + green_Comp:dir_Comp
+  Binomial ~ green_Comp + dir_Comp +
+  normal_Mag:green_Comp:dir_Comp
 
 
 # Train the model between the binomial location type and 
