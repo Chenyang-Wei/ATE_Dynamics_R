@@ -2,7 +2,7 @@
 
 # 1) Determine an optimal threshold of ATEI.
 
-# Updated: 6/24/2023.
+# Updated: 12/8/2023.
 
 
 # 0) Setup. ---------------------------------------------------------------
@@ -69,6 +69,11 @@ table(samples_withATEI$ATEI_gtPt5,
 mean(samples_withATEI$ATEI_gtPt5 == 
        samples_withATEI$Binomial) # 0.806599.
 
+# Corrlation analysis.
+cor(samples_withATEI$normal_Mag, samples_withATEI$mag_Comp) # 0.5769187.
+cor(samples_withATEI$green_Comp, samples_withATEI$mag_Comp) # 0.4558763.
+cor(samples_withATEI$dir_Comp, samples_withATEI$mag_Comp) # 0.2217633.
+
 
 ## Plot the pixel-based NDVI density.
 
@@ -133,6 +138,55 @@ png(
   units = "px", res = 800)
 
 pixelNDVI_Plot
+
+dev.off()
+
+
+#### Plot the orientation component. ####
+
+dir_Fun <- function(theta_Degree) {
+  theta <- (theta_Degree / 180) * pi
+  return ((1 - cos(theta)) / 2)
+}
+
+dir_Curve <- 
+  ggplot(data.frame(x = c(0, 360)), 
+         aes(x = x)) +
+  stat_function(
+    fun = dir_Fun,
+    xlim = c(90, 270),
+    color = "red",
+    lwd = 1) +
+  stat_function(
+    fun = dir_Fun,
+    xlim = c(0, 90),
+    color = "darkgreen",
+    lwd = 1) +
+  stat_function(
+    fun = dir_Fun,
+    xlim = c(270, 360),
+    color = "darkgreen",
+    lwd = 1) +
+  geom_hline(
+    yintercept = 0.5,
+    color = "black",
+    lty = "dashed", lwd = 1) +
+  scale_x_continuous(breaks = seq(0, 360, 90)) +
+  xlab("Gradient angle (°)") +
+  ylab("Orientation component") +
+  guides(fill = "legend", color = "none") +
+  theme(legend.position = "none",
+        axis.title = element_text(face = "bold"))
+
+dir_Curve
+
+# Output the result.
+png(
+  file.path(wd_Figs, "dir_Curve.png"),
+  width = 4500, height = 3000,
+  units = "px", res = 800)
+
+dir_Curve
 
 dev.off()
 
